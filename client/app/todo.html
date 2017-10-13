@@ -1,0 +1,35 @@
+
+<div class='container' ng-controller="TodoController as vm" id="tasker" class="tasker">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                    <div id="tasker-header" class="tasker-header">
+                        
+                            <input ng-keyup="$event.keyCode == 13 ? vm.addTask() : null"
+                            type="text" id="input-task" style="color:black;" ng-model="vm.newTask"placeholder="Enter a task">
+                            <button ng-click="vm.addTask()" id="add-task-btn"><i class="fa fa-fw fa-plus"></i>
+                            </button>
+                    </div>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            	<div class="tasker-body">
+                        <ul id="tasks">
+                            <li class="task" ng-repeat="t in vm.tasks" >
+                                <input type="checkbox" style="opacity:0; position:absolute; ">
+                                <label ng-dblclick="vm.editTodo(t)">{{t.task}}</label>
+                                <button ng-click="vm.removeTask($index,t.post)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                               
+                            </li>
+                        </ul>
+                    </div>
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+
+</div>

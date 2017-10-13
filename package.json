@@ -1,0 +1,42 @@
+{
+  "name": "todo-task",
+  "version": "1.0.0",
+  "description": "Add TODOS ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "start": "npm run build && nodemon dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "twitter",
+    "mongo",
+    "node"
+  ],
+  "author": "Kunal Sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "dependencies": {
+    "agenda": "^1.0.0",
+    "body-parser": "^1.18.1",
+    "express": "^4.15.4",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "mongoose": "^4.11.11",
+    "morgan": "^1.8.2",
+    "redis": "^2.8.0",
+    "rimraf": "^2.6.2",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1"
+  }
+}
