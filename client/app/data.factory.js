@@ -48,6 +48,15 @@
             deferred.reject("Error: request returned status " + status); 
           });
           return deferred.promise;
+        },
+        updateTodo: function(text,postID){
+          var deferred = $q.defer();
+          $http.put('/api/',{},{params: {'_id':postID.substring(5),'text': text} }).then(function(data){
+            deferred.resolve();
+          },function(data, status, headers, config) {
+            deferred.reject("Error: request returned status " + status); 
+          });
+          return deferred.promise;
         }
     }
   };

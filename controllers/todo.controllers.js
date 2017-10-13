@@ -113,7 +113,43 @@ controller.getAllTodo = (req, res) => {
 
  }
 controller.updateTodo = (req,res)=>{
+       console.log("~~~~~~~")
 
+
+       
+        var _id = req.query["_id"]
+        var text =  req.query["text"]
+        console.log("~~~~~~~")
+        console.log("~~~~~~~")
+        console.log("~~~~~~~")
+        
+                console.log(_id,text)  
+        console.log("~~~~~~~")
+        console.log("~~~~~~~")
+        console.log("~~~~~~~")
+        // let t = new Todo({
+        //     "text":text
+        // });
+        const doc = {
+            "text":text
+        }
+        Todo.update({"_id":_id}, doc, (err,user)=>{
+            if(err){
+                next(err);
+            }
+            console.log("mongo todo updated")
+            redisClient.setItem("todo","post_"+_id, text, (err)=> {
+                if (err) {
+                    next (err);
+                }
+                 console.log("redis todo updated")
+                 res.status(201);
+                 res.json({
+                    "message":"success",
+                    "data": req.query["_id"]
+                 });
+            })
+       });
 }
 
 
