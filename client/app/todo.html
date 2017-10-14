@@ -14,12 +14,22 @@
 
                     <div id="tasker-header" class="tasker-header">
                         
-                           
-                            <input ng-keyup="$event.keyCode == 13 ? vm.addTask() : null"
-                            type="text" id="input-task" style="color:black;" ng-model="vm.newTask"placeholder="Enter a task"
-                            autofocus>
-                            <button ng-click="vm.addTask()" id="add-task-btn"><i class="fa fa-fw fa-plus"></i>
-                            </button>
+                        <form name="todoAddForm"
+                           enctype="multipart/form-data">
+                           <!-- ng-keyup="$event.keyCode == 13 ? vm.addTask() : null" -->
+
+                                <input 
+                                
+                                type="text" id="input-task" style="color:black;width:100%" ng-model="vm.user.newTask" placeholder="Enter a task"
+                                autofocus
+                               
+                                >
+                                <input type="file" ngf-select ng-model="vm.file" style="width:70%;float: left;" />
+                                <button style="float:right;"
+                                ng-click="vm.addTask()" id="add-task-btn"><i class="fa fa-fw fa-plus"></i>
+                                </button>
+                           </form>
+                          
                     </div>
             </div>
             <div class="col-sm-4"></div>
@@ -33,7 +43,7 @@
                             <li style="cursor:pointer" ng-class="{isEditing:t == vm.editedTodo,task:true}" ng-repeat="t in vm.tasks track by $index" >
                                <div  class="view" ng-dblclick="vm.editTodo(t)">
                                     <input type="checkbox" style="opacity:0; position:absolute; ">
-                                    <label style="cursor:pointer" >{{t.task}}</label>
+                                    <label style="cursor:pointer" >{{t.text}}</label>
                                     
                                </div>
                                <button ng-click="vm.removeTask($index,t.post)">
@@ -42,6 +52,10 @@
                                 <form ng-submit="vm.saveEdits(t)">
                                         <input class="edit"  ng-model="vm.editedText"  ng-blur="vm.saveEdits(t)" autofocus>
                                 </form>
+                                <div style="text-align:center">
+                                        <img style="width:40%" ng-src="{{t.imageUrl}}">
+                                </div>
+                                
                             </li>
                         </ul>
                     </div>

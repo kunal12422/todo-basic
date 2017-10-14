@@ -1,31 +1,42 @@
 'use strict';
 (function () {
 
-  var todoController = function todoController(DataFactory) {
+  var todoController = function todoController(DataFactory,Upload) {
     var vm = this;
-    // fetchTodoList.then(function (data) {
-    //       console.log(data)
-          
-    //   });
+   
+    vm.file = null;
     vm.tasks = [];
     vm.editedTodo = null;
     vm.originalVal = "";
     vm.editedText = "";
+    vm.user={};
     DataFactory.getAllTasks().then(function(data){
       vm.tasks = data;
+      
     });
 
     vm.newTask = ""
     vm.addTask = function(){
-      if(!vm.newTask){
-        return
+      if(!vm.user.newTask || !vm.file){
+        return;
       }
-      DataFactory.addTask(vm.newTask).then(function(data){
-        DataFactory.getAllTasks().then(function(data){
-          vm.tasks = data;
+      
+      Upload.upload({
+        url:'/api/image',
+        data: {file:vm.file }
+      }).then(function(res){
+        vm.user.imageUrl=res.data.filename
+        // console.log(vm.user.imageUrl);
+        console.log("image suceess");
+        DataFactory.addTask(vm.user).then(function(data){
+          DataFactory.getAllTasks().then(function(data){
+            vm.tasks = data;
+          });
+        
+           vm.user.newTask = ""
         });
-        vm.newTask = ""
-      });
+      })
+      
       
     }
     vm.removeTask = function($index,postId){
@@ -50,8 +61,9 @@
           return;
       }
       var postId = todo.post;
+      var imageUrl = todo.imageUrl;
       console.log(postId,vm.editedText);
-      DataFactory.updateTodo(vm.editedText,postId).then(function(data){
+      DataFactory.updateTodo(vm.editedText,postId,imageUrl).then(function(data){
         DataFactory.getAllTasks().then(function(data){
           vm.tasks = data;
           vm.editedText = "";
@@ -67,7 +79,7 @@
   };
 
 
-  angular.module('coderDecoder2App').controller('TodoController', [ 'DataFactory',todoController]);
+  angular.module('coderDecoder2App').controller('TodoController', [ 'DataFactory','Upload',todoController]);
 
 })();
 

@@ -4,56 +4,76 @@ import redisClient from '../db/RedisUtils';
 const controller = {};
 
 controller.createTodo = (req, res) => {
-    let _id = req.body["_id"];
-    console.log("-----")
-
-    console.log(req.body["text"], _id)
+   
 
     console.log("-----")
-    let t = new Todo(
-        req.body
-       );
-    Todo.findById(_id, (err, todo)=>{
-       if(!todo){
-           t.save((err)=>{
-                console.log("saved mongo");
-                redisClient.setItem("todo","post_"+t["_id"], req.body["text"], (err)=> {
-                    if (err) {
-                        next (err);
-                    }
-                     console.log("redis todo created");
-                     res.status(201);
-                     res.json({
-                        "message":"success",
-                        "data": t["_id"]
-                     });
-                })
-           })
-       }else{
-           Todo.update({"_id":_id}, t, (err)=>{
-                if(err){
-                    next(err);
-                }
-                console.log("mongo todo updated")
-                redisClient.setItem("todo","post_"+_id, req.body["text"], (err)=> {
-                    if (err) {
-                        next (err);
-                    }
-                     console.log("redis todo updated")
-                     res.status(201);
-                     res.json({
-                        "message":"success",
-                        "data": t["_id"]
-                     });
-                })
-           });
-       }
 
+    console.log(req.body);
+    console.log( "user " + req.user["_id"])
+    console.log("-----")
+
+
+    let t = new Todo({
+        "text":req.body["text"],
+        "imageUrl":req.body["imageUrl"],
+        "user":req.user["_id"]
     });
+
+
+    t.save((err)=>{
+        console.log("saved mongo");
+   
+        let obj = {
+            "text":req.body["text"],
+            "imageUrl":req.body["imageUrl"]
+        }
+        redisClient.setItem("todo_"+req.user["_id"] , "post_"+t["_id"], JSON.stringify(obj), (err)=> {
+            if (err) {
+                next (err);
+            }
+            console.log("redis todo created");
+            res.status(201);
+            res.json({
+                "message":"success",
+                "data": t["_id"]
+            });
+        })
+    })
+
+    // uploader(req, res, function(err) {
+    //     if(err) return res.status(500).json({ message: err });
+        
+    //     console.log(JSON.stringify(req.file ))
+
+    // });
+       
+    
+    //    else{
+    //        Todo.update({"_id":_id}, t, (err)=>{
+    //             if(err){
+    //                 next(err);
+    //             }
+    //             console.log("mongo todo updated")
+    //             redisClient.setItem("todo_"+req.user["_id"],"post_"+_id, req.body["text"], (err)=> {
+    //                 if (err) {
+    //                     next (err);
+    //                 }
+    //                  console.log("redis todo updated")
+    //                  res.status(201);
+    //                  res.json({
+    //                     "message":"success",
+    //                     "data": t["_id"]
+    //                  });
+    //             })
+    //        });
+    //    }
+
+    
 
 }
 controller.getAllTodo = (req, res) => {
-    redisClient.getItem("todo",(err, result)=>{
+    
+    redisClient.getItem("todo_"+req.user["_id"],(err, result)=>{
         if(err){
             next(err);
         }
@@ -68,7 +88,7 @@ controller.getAllTodo = (req, res) => {
         if(result){
             var arr = []
             
-            console.log(result);
+            console.log("FROM REDIS GETALL RESULT " + result);
             var k=0;
             for(var i in result){
                 // console.log(i)
@@ -97,7 +117,7 @@ controller.getAllTodo = (req, res) => {
     .exec()
     .then((data)=>{
         console.log("removed for mongo")
-        redisClient.removeItem("todo","post_"+req.query["_id"], (err, succ)=>{
+        redisClient.removeItem("todo_"+req.user["_id"],"post_"+req.query["_id"], (err, succ)=>{
             if(err){
                 next(err);
             }
@@ -127,9 +147,7 @@ controller.updateTodo = (req,res)=>{
         console.log("~~~~~~~")
         console.log("~~~~~~~")
         console.log("~~~~~~~")
-        // let t = new Todo({
-        //     "text":text
-        // });
+       
         const doc = {
             "text":text
         }
@@ -137,8 +155,12 @@ controller.updateTodo = (req,res)=>{
             if(err){
                 next(err);
             }
+            let obj = {
+                "text":req.query["text"],
+                "imageUrl":req.query["imageUrl"]
+            }
             console.log("mongo todo updated")
-            redisClient.setItem("todo","post_"+_id, text, (err)=> {
+            redisClient.setItem("todo_"+req.user["_id"],"post_"+_id, JSON.stringify(obj), (err)=> {
                 if (err) {
                     next (err);
                 }
