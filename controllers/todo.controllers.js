@@ -4,14 +4,6 @@ import redisClient from '../db/RedisUtils';
 const controller = {};
 
 controller.createTodo = (req, res) => {
-   
-
-    console.log("-----")
-
-    console.log(req.body);
-    console.log( "user " + req.user["_id"])
-    console.log("-----")
-
 
     let t = new Todo({
         "text":req.body["text"],
@@ -39,37 +31,6 @@ controller.createTodo = (req, res) => {
             });
         })
     })
-
-    // uploader(req, res, function(err) {
-    //     if(err) return res.status(500).json({ message: err });
-        
-    //     console.log(JSON.stringify(req.file ))
-
-    // });
-       
-    
-    //    else{
-    //        Todo.update({"_id":_id}, t, (err)=>{
-    //             if(err){
-    //                 next(err);
-    //             }
-    //             console.log("mongo todo updated")
-    //             redisClient.setItem("todo_"+req.user["_id"],"post_"+_id, req.body["text"], (err)=> {
-    //                 if (err) {
-    //                     next (err);
-    //                 }
-    //                  console.log("redis todo updated")
-    //                  res.status(201);
-    //                  res.json({
-    //                     "message":"success",
-    //                     "data": t["_id"]
-    //                  });
-    //             })
-    //        });
-    //    }
-
-    
-
 }
 controller.getAllTodo = (req, res) => {
     
@@ -91,7 +52,7 @@ controller.getAllTodo = (req, res) => {
             console.log("FROM REDIS GETALL RESULT " + result);
             var k=0;
             for(var i in result){
-                // console.log(i)
+               
                 var o = {};
                 o["post"] = i;
                 o["task"] = result[i];
@@ -100,7 +61,7 @@ controller.getAllTodo = (req, res) => {
              
             }
             res.status(200);
-            // console.log(arr.push(result))
+           
             res.json({
                 "message":"success",
                 "data": arr,
@@ -111,7 +72,7 @@ controller.getAllTodo = (req, res) => {
     })
  }
  controller.deleteTodo = (req, res) => {
-     console.log("ID SUBMITTED      post_"+req.query["_id"])
+    
     Todo
     .remove({"_id":req.query["_id"]})
     .exec()
@@ -133,20 +94,13 @@ controller.getAllTodo = (req, res) => {
 
  }
 controller.updateTodo = (req,res)=>{
-       console.log("~~~~~~~")
+      
 
 
        
         var _id = req.query["_id"]
         var text =  req.query["text"]
-        console.log("~~~~~~~")
-        console.log("~~~~~~~")
-        console.log("~~~~~~~")
-        
-                console.log(_id,text)  
-        console.log("~~~~~~~")
-        console.log("~~~~~~~")
-        console.log("~~~~~~~")
+
        
         const doc = {
             "text":text

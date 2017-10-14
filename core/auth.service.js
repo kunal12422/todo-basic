@@ -4,8 +4,7 @@ import passport from 'passport'
 import jwt from 'jsonwebtoken'
 import expressJwt from 'express-jwt'
 import compose from 'composable-middleware'
-import crypto from  'crypto'
-import _ from 'lodash'
+
 import User from '../models/user.model'
 
 
@@ -19,17 +18,9 @@ function isAuthenticated(){
   
     .use(function(req, res, next){
 
-            
-         console.log(req.query)
             if(req.query && req.query.hasOwnProperty('access_token')){
               req.headers.authorization = 'Bearer ' + req.query.access_token;
-            }
-            // if(req.query && req.cookies['token']) {
-              
-            //   req.headers.authorization = 'Bearer ' + req.cookies.token;
-            // }
-           
-          //  console.log("access_token " + req.query["access_token"])
+     
             validateJwt(req, res, next);  
            
 
@@ -40,7 +31,6 @@ function isAuthenticated(){
       
           if(err.name === 'UnauthorizedError') {
               console.log("===== LOGGER UNAUTHOIZED ====")
-              // console.log("NOT authorized")
 
               res.redirect("/login")
           }else{

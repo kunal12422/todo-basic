@@ -60,10 +60,10 @@ angular.module('coderDecoder2App', [
 
       responseError: function (response) {
         if (response.status === 401) {
-          (state || (state == $injector.get('$state'))).go('login');
-
+          
+          
           $cookies.remove('token');
-          return $q.reject(response);
+           return $q.reject(response);
         }
         else {
           return $q.reject(response);
@@ -71,25 +71,6 @@ angular.module('coderDecoder2App', [
       }
     };
   }])
-  .directive("fileread", [function () {
-    return {
-        scope: {
-            fileread: "="
-        },
-        link: function (scope, element, attributes) {
-            element.bind("change", function (changeEvent) {
-                var reader = new FileReader();
-                reader.onload = function (loadEvent) {
-                    scope.$apply(function () {
-                        scope.fileread = loadEvent.target.result;
-                    });
-                }
-                reader.readAsDataURL(changeEvent.target.files[0]);
-            });
-        }
-    }
-}]);
-
 ;
 
 
