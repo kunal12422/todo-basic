@@ -3,7 +3,7 @@
 'use strict';
 (function () {
 
-  var mainController = function mainController(DataFactory,$cookies,$scope) {
+  var mainController = function mainController(DataFactory,$cookies,$scope,ngToast) {
     var vm = this;
     vm.isLoggedIn = $cookies.get('user');
 
@@ -20,6 +20,6 @@
   };
 
 
-  angular.module('coderDecoder2App').controller('MainController',[ 'DataFactory','$cookies','$scope',mainController]);
+  angular.module('coderDecoder2App').controller('MainController',[ 'DataFactory','$cookies','$scope','ngToast',mainController]);
 
 })();

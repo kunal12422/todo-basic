@@ -5,7 +5,7 @@ import Mongoose from 'mongoose'
 import cors from 'cors'
 import passport from 'passport'
 import session from 'express-session'
-
+import csrf from 'csurf'
 
 
 import initPassport from './core/passport';
@@ -13,13 +13,15 @@ import initPassport from './core/passport';
 import config from './core/config/config.dev'
 import api from './routes/api.route'
 import users from './routes/user.route'
-const  secret = process.env.SECRET || 'mysecret';
+
+
 
 const port = config.serverPort;
 const app = express();
 
 
-
+app.set('secret', 'mysecret');
+const  secret = process.env.SECRET || 'mysecret';
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('combined'));
@@ -28,7 +30,11 @@ app.use(session({ secret: secret}))
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors())
-
+app.use(csrf());
+app.use(function(req, res, next) {
+    res.cookie('XSRF-TOKEN', req.csrfToken());
+    next();
+});
 
 
 initPassport(passport);

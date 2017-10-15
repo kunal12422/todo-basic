@@ -2,7 +2,7 @@
 
 (function(){
 
-  var DataFactory = function($http,$q,$cookies,$state){
+  var DataFactory = function($http,$q,$cookies,$state,ngToast){
 
     var allPost = [];
     var isLoggedIn = " ";
@@ -77,7 +77,7 @@
             isLoggedIn = res.data["user"];
              deferred.resolve(res);
           },function(data, status, headers, config) {
-            console.log(data);
+            ngToast.create(data.data.message);
             deferred.reject("Error: request returned status " + status); 
           });
           return deferred.promise;
@@ -95,6 +95,7 @@
           isLoggedIn = res.data["user"];
            deferred.resolve(res);
         },function(data, status, headers, config) {
+          ngToast.create(data.data.message);
           console.log(data);
           deferred.reject("Error: request returned status " + status); 
         });
@@ -109,7 +110,7 @@
     }
   };
 
-angular.module('coderDecoder2App').factory('DataFactory', ['$http','$q','$cookies','$state', DataFactory]);
+angular.module('coderDecoder2App').factory('DataFactory', ['$http','$q','$cookies','$state','ngToast', DataFactory]);
 
 })();
 

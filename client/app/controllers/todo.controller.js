@@ -1,7 +1,7 @@
 'use strict';
 (function () {
 
-  var todoController = function todoController(DataFactory,Upload) {
+  var todoController = function todoController(DataFactory,Upload,ngToast,$cookies) {
     var vm = this;
    
     vm.file = null;
@@ -12,12 +12,17 @@
     vm.user={};
     DataFactory.getAllTasks().then(function(data){
       vm.tasks = data;
-      
     });
 
     vm.newTask = ""
     vm.addTask = function(){
+
+      if(!$cookies.get('token')){
+        ngToast.create('Login to add todo');
+        return;
+      }
       if(!vm.user.newTask || !vm.file){
+        ngToast.create('Fields can\'t be empty');
         return;
       }
       
@@ -34,6 +39,7 @@
           });
         
            vm.user.newTask = ""
+           vm.file="";
         });
       })
       
@@ -79,7 +85,7 @@
   };
 
 
-  angular.module('coderDecoder2App').controller('TodoController', [ 'DataFactory','Upload',todoController]);
+  angular.module('coderDecoder2App').controller('TodoController', [ 'DataFactory','Upload','ngToast','$cookies',todoController]);
 
 })();
 

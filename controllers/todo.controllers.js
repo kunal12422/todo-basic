@@ -100,7 +100,10 @@ controller.updateTodo = (req,res)=>{
        
         var _id = req.query["_id"]
         var text =  req.query["text"]
-
+        
+        if(_id.length != 24){
+            return;
+        }
        
         const doc = {
             "text":text

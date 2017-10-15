@@ -3,9 +3,14 @@
 angular.module('coderDecoder2App', [
     'ui.router',
     'ngCookies',
-    'ngFileUpload'
+    'ngFileUpload',
+     'ngToast'
   ])
-
+  .config(['ngToastProvider', function(ngToastProvider) {
+    ngToastProvider.configure({
+      animation: 'fade' // or 'slide'
+    });
+  }])
   .config(['$stateProvider', '$urlRouterProvider', '$httpProvider','$locationProvider', function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
 
     $httpProvider.interceptors.push('authInterceptor');
@@ -60,7 +65,6 @@ angular.module('coderDecoder2App', [
 
       responseError: function (response) {
         if (response.status === 401) {
-          
           
           $cookies.remove('token');
            return $q.reject(response);
