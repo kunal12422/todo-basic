@@ -9,7 +9,10 @@ controller.upload = (req, res) => {
         if(err) return res.status(500).json({ message: err });
         
         // console.log(JSON.stringify(req.file ))
-        res.status(201).json({ filename: req.file.location});
+        res.status(201).json({ 
+            message:"Success",
+            filename: req.file.location
+        });
         
         });
 }

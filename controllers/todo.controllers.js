@@ -5,9 +5,11 @@ const controller = {};
 
 controller.createTodo = (req, res) => {
 
+    let text = req.body["text"],imageUrl=req.body["imageUrl"];
+
     let t = new Todo({
-        "text":req.body["text"],
-        "imageUrl":req.body["imageUrl"],
+        "text":text,
+        "imageUrl":imageUrl,
         "user":req.user["_id"]
     });
 
@@ -16,10 +18,12 @@ controller.createTodo = (req, res) => {
         console.log("saved mongo");
    
         let obj = {
-            "text":req.body["text"],
-            "imageUrl":req.body["imageUrl"]
+            "text":text,
+            "imageUrl":imageUrl
         }
-        redisClient.setItem("todo_"+req.user["_id"] , "post_"+t["_id"], JSON.stringify(obj), (err)=> {
+        let keyObject = "post_"+t["_id"];
+        let hashObject = "todo_"+req.user["_id"];
+        redisClient.setItem( hashObject , keyObject , JSON.stringify(obj), (err)=> {
             if (err) {
                 next (err);
             }
@@ -46,7 +50,7 @@ controller.getAllTodo = (req, res) => {
                 "count":0
               });
         }
-        if(result){
+        else{
             var arr = []
             
             console.log("FROM REDIS GETALL RESULT " + result);
@@ -73,8 +77,19 @@ controller.getAllTodo = (req, res) => {
  }
  controller.deleteTodo = (req, res) => {
     
+    let _id =req.query["_id"];
+
+    if(_id.length != 24 || !_id){
+       return res.status(403).json({
+            "message":"Not valid match",
+            "data":null
+        });
+    }
+
+   
+   
     Todo
-    .remove({"_id":req.query["_id"]})
+    .remove({"_id":_id})
     .exec()
     .then((data)=>{
         console.log("removed for mongo")
@@ -101,8 +116,12 @@ controller.updateTodo = (req,res)=>{
         var _id = req.query["_id"]
         var text =  req.query["text"]
         
-        if(_id.length != 24){
-            return;
+        if(_id.length != 24 || !_id){
+            return res.status(403).json({
+                "message":"Not valid match",
+                "data":null
+            });
+            
         }
        
         const doc = {
