@@ -5,8 +5,8 @@ import s3   from 'multer-s3'
 
 aws.config.update({
     
-    secretAccessKey:'DcQZPI/UU+mFQQtwM1IQ1b5gkuxhK3vz1UIRCgWW',
-    accessKeyId:  'AKIAI7PS5E23WKGYMNBA',
+    secretAccessKey:'<secret-access-key>',
+    accessKeyId:  '<access-key>',
 
     region: 'ap-south-1',
   });
